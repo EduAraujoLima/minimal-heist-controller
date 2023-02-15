@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Heist {
+  id               String      @id @default(cuid())
+  name             String
+  location         String
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  primaryTarget    Target      @relation(fields: [targetId], references: [id])
+  secondaryTargets Target[]    @relation("SecondaryTargets")
+  targetId         String
+  HeistFinal       HeistFinal?
+}
+
+model Target {
+  id             String     @id @default(cuid())
+  name           String
+  type           TargetType @relation(fields: [targetTypeId], references: [id])
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  value          Int
+  targetTypeId   String
+  Heist          Heist[]
+  secondaryHeist Heist[]    @relation("SecondaryTargets")
+}
+
+model TargetType {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Target    Target[]
+}
+
+model Member {
+  id           String      @id @default(cuid())
+  name         String
+  rank         Int
+  avatar       String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  HeistFinal   HeistFinal? @relation(fields: [heistFinalId], references: [id])
+  heistFinalId String?
+}
+
+model HeistFinal {
+  id        String   @id @default(cuid())
+  Heist     Heist    @relation(fields: [heistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  heistId   String   @unique
+  members   Member[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

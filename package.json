@@ -1,0 +1,49 @@
+{
+  "name": "ts-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "esbuild src/server.ts --platform=node --bundle --minify --outfile=dist/index.js",
+    "dev": "tsnd --respawn src/server.ts",
+    "eslint:fix": "eslint --fix",
+    "populate": "ts-node-dev src/populate.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "@types/koa": "^2.13.5",
+    "@types/koa-bodyparser": "^4.3.10",
+    "@types/koa-convert": "^1.2.4",
+    "@types/koa-logger": "^3.1.2",
+    "@types/koa-router": "^7.4.4",
+    "@types/node": "^18.13.0",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "esbuild": "^0.17.8",
+    "eslint": "^8.34.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.4.3",
+    "prisma": "^4.10.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "@koa/cors": "^4.0.0",
+    "@prisma/client": "^4.10.1",
+    "@types/koa-cors": "^0.0.2",
+    "dotenv-safe": "^8.2.0",
+    "http-status-codes": "^2.2.0",
+    "koa": "^2.14.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-convert": "^2.0.0",
+    "koa-cors": "^0.0.16",
+    "koa-logger": "^3.2.1",
+    "koa-router": "^12.0.0",
+    "zod": "^3.20.6"
+  }
+}
