@@ -4,13 +4,15 @@ import { connectDb } from './database';
 
 require('dotenv-safe').config();
 
-async () => {
+const startDatabase = async () => {
   try {
     await connectDb();
   } catch (error) {
     process.exit(1);
   }
 };
+
+startDatabase()
 
 const server = createServer(app.callback());
 

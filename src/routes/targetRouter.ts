@@ -1,22 +1,20 @@
 import { StatusCodes } from 'http-status-codes';
+import { Next } from 'koa';
 import Router from 'koa-router';
-import { createTarget } from '../repository/target';
+import { Context } from 'vm';
+import { createTargetMiddleware } from '../middlewares/TargetMiddleware';
+import { createTarget } from '../repository/TargetRepository';
 import { CreateTarget } from '../schemas/targetSchemas';
 
 const targetRouter = new Router({
   prefix: '/api/target',
 });
 
-targetRouter.post('/', async (ctx) => {
+targetRouter.post('/', createTargetMiddleware, async (ctx: Context) => {
   const target = ctx.body as CreateTarget;
-  try {
-    const newTarget = await createTarget(target);
+  const newTarget = await createTarget(target);
     ctx.status = StatusCodes.CREATED;
     ctx.body = newTarget;
-  } catch (err) {
-    ctx.status = StatusCodes.BAD_REQUEST;
-    ctx.body = { status: 'Bad request', message: err };
-  }
 });
 
 export default targetRouter;

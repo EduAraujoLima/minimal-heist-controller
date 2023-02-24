@@ -11,27 +11,33 @@ datasource db {
 }
 
 model Heist {
-  id               String      @id @default(cuid())
-  name             String
-  location         String
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  primaryTarget    Target      @relation(fields: [targetId], references: [id])
-  secondaryTargets Target[]    @relation("SecondaryTargets")
-  targetId         String
-  HeistFinal       HeistFinal?
+  id         String      @id @default(cuid())
+  name       String
+  location   String
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  HeistFinal HeistFinal?
+}
+
+model HeistDifficulty {
+  id         String       @id @default(cuid())
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  HeistFinal HeistFinal[]
 }
 
 model Target {
-  id             String     @id @default(cuid())
-  name           String
-  type           TargetType @relation(fields: [targetTypeId], references: [id])
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
-  value          Int
-  targetTypeId   String
-  Heist          Heist[]
-  secondaryHeist Heist[]    @relation("SecondaryTargets")
+  id              String       @id @default(cuid())
+  name            String
+  type            TargetType   @relation(fields: [targetTypeId], references: [id])
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  normalModeValue Int
+  hardModeValue   Int
+  targetTypeId    String
+  Heist           HeistFinal[]
+  secondaryHeist  HeistFinal[] @relation("SecondaryTargets")
 }
 
 model TargetType {
@@ -54,10 +60,15 @@ model Member {
 }
 
 model HeistFinal {
-  id        String   @id @default(cuid())
-  Heist     Heist    @relation(fields: [heistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  heistId   String   @unique
-  members   Member[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String          @id @default(cuid())
+  Heist            Heist           @relation(fields: [heistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  heistId          String          @unique
+  members          Member[]
+  difficulty       HeistDifficulty @relation(fields: [difficultyId], references: [id])
+  difficultyId     String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  primaryTarget    Target          @relation(fields: [targetId], references: [id])
+  secondaryTargets Target[]        @relation("SecondaryTargets")
+  targetId         String
 }
