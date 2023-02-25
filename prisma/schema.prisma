@@ -19,14 +19,6 @@ model Heist {
   HeistFinal HeistFinal?
 }
 
-model HeistDifficulty {
-  id         String       @id @default(cuid())
-  name       String
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  HeistFinal HeistFinal[]
-}
-
 model Target {
   id              String       @id @default(cuid())
   name            String
@@ -37,15 +29,7 @@ model Target {
   hardModeValue   Int
   targetTypeId    String
   Heist           HeistFinal[]
-  secondaryHeist  HeistFinal[] @relation("SecondaryTargets")
-}
-
-model TargetType {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Target    Target[]
+  secondaryTarget HeistFinal[] @relation("SecondaryTargets")
 }
 
 model Member {
@@ -57,6 +41,20 @@ model Member {
   updatedAt    DateTime    @updatedAt
   HeistFinal   HeistFinal? @relation(fields: [heistFinalId], references: [id])
   heistFinalId String?
+}
+
+model CrewMember {
+  id             String       @id @default(cuid())
+  name           String
+  habilityLevel  Int
+  avatar         String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  HeistFinal     HeistFinal?  @relation(fields: [heistFinalId], references: [id])
+  heistFinalId   String?
+  category       CrewCategory @relation(fields: [crewCategoryId], references: [id])
+  categoryId     String
+  crewCategoryId String
 }
 
 model HeistFinal {
@@ -71,4 +69,29 @@ model HeistFinal {
   primaryTarget    Target          @relation(fields: [targetId], references: [id])
   secondaryTargets Target[]        @relation("SecondaryTargets")
   targetId         String
+  CrewMember       CrewMember[]
+}
+
+model TargetType {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Target    Target[]
+}
+
+model HeistDifficulty {
+  id         String       @id @default(cuid())
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  HeistFinal HeistFinal[]
+}
+
+model CrewCategory {
+  id         String       @id @default(cuid())
+  name       String
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  CrewMember CrewMember[]
 }

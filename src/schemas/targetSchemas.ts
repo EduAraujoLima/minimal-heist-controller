@@ -12,13 +12,16 @@ const createTargetSchema = z.object({
     .string({
       required_error: 'Type is required',
     })
-    .uuid({
-      message: 'Type must be a valid UUID',
+    .cuid({
+      message: 'Type must be a valid CUID',
     }),
-  value: z.number({
-    required_error: 'Value is required',
+  normalModeValue: z.number({
+    required_error: 'Value on normal mode is required',
   }),
-});
+  hardModeValue: z.number({
+    required_error: 'Value on hard mode is required',
+  }),
+}).strict();
 
 const updateTargetSchema = z.object({
   name: z.string().optional(),
@@ -26,7 +29,11 @@ const updateTargetSchema = z.object({
   value: z.number().optional(),
 });
 
+const getTargetByUuidSchema = z.string().cuid({
+  message: 'Target UUID must be a valid CUID',
+});
+
 type CreateTarget = z.infer<typeof createTargetSchema>;
 type UpdateTarget = z.infer<typeof updateTargetSchema>;
 
-export { createTargetSchema, CreateTarget, UpdateTarget };
+export { createTargetSchema, CreateTarget, UpdateTarget, getTargetByUuidSchema };

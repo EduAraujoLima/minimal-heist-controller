@@ -8,3 +8,15 @@ export const createTarget = async (target: CreateTarget) =>
       ...target,
     },
   });
+
+export const getTargets = async () => await prisma.target.findMany();
+
+export const getTargetByCuid = async (cuid: string) =>
+  await prisma.target.findUnique({
+    where: {
+      id: cuid,
+    },
+    include: {
+      type: true,
+    },
+  });
