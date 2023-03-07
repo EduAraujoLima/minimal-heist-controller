@@ -1,6 +1,6 @@
 import { Target } from '@prisma/client';
 import { prisma } from '../database/prisma';
-import { CreateTarget } from '../schemas/targetSchemas';
+import { CreateTarget, UpdateTarget } from '../schemas/targetSchemas';
 
 export const createTarget = async (target: CreateTarget) =>
   await prisma.target.create({
@@ -18,5 +18,22 @@ export const getTargetByCuid = async (cuid: string) =>
     },
     include: {
       type: true,
+    },
+  });
+
+export const updateTarget = async (cuid: string, target: UpdateTarget) =>
+  await prisma.target.update({
+    where: {
+      id: cuid,
+    },
+    data: {
+      ...target,
+    },
+  });
+
+export const deleteTarget = async (cuid: string) =>
+  await prisma.target.delete({
+    where: {
+      id: cuid,
     },
   });

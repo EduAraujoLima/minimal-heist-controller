@@ -1,13 +1,15 @@
 import Router from 'koa-router';
-import { createTargetMiddleware, getTargetByCuidMiddleware, getTargetsMiddleware } from '../middlewares/TargetMiddleware';
+import { createTargetService, deleteTargetService, getTargetByCuidService, getTargetsService, updateTargetService } from '../services/TargetService';
 
 
 const targetRouter = new Router({
   prefix: '/api/target',
 });
 
-targetRouter.post('/', createTargetMiddleware);
-targetRouter.get('/', getTargetsMiddleware);
-targetRouter.get('/:id', getTargetByCuidMiddleware)
+targetRouter.post('/', createTargetService);
+targetRouter.get('/', getTargetsService);
+targetRouter.get('/:id', getTargetByCuidService)
+targetRouter.put('/:id', updateTargetService);
+targetRouter.delete('/:id', deleteTargetService);
 
 export default targetRouter;

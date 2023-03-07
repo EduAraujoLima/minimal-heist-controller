@@ -25,15 +25,12 @@ const createTargetSchema = z.object({
 
 const updateTargetSchema = z.object({
   name: z.string().optional(),
-  targetTypeId: z.string().optional(),
-  value: z.number().optional(),
-});
-
-const getTargetByUuidSchema = z.string().cuid({
-  message: 'Target UUID must be a valid CUID',
-});
+  targetTypeId: z.string().cuid().optional(),
+  normalModeValue: z.number().optional(),
+  hardModeValue: z.number().optional(),
+}).strict();
 
 type CreateTarget = z.infer<typeof createTargetSchema>;
 type UpdateTarget = z.infer<typeof updateTargetSchema>;
 
-export { createTargetSchema, CreateTarget, UpdateTarget, getTargetByUuidSchema };
+export { createTargetSchema, updateTargetSchema, CreateTarget, UpdateTarget };
