@@ -1,8 +1,7 @@
 import { Target, TargetType } from '@prisma/client';
 import { StatusCodes } from 'http-status-codes';
 import { Context } from 'koa';
-import { getTargetTypeByCuid } from '../repository';
-import { createTarget, deleteTarget, getTargetByCuid, getTargets, updateTarget } from '../repository/TargetRepository';
+import { getTargetTypeByCuid, targetRepository } from '../repository';
 import {
   CreateTarget,
   createTargetSchema,
@@ -10,7 +9,9 @@ import {
   updateTargetSchema,
 } from '../schemas/targetSchemas';
 import { simpleActionMiddleware } from '../utils/Middlewares';
-import { cuidSchema, joinZodIssues } from '../utils/ZodUtils';
+import { joinZodIssues } from '../utils/ZodUtils';
+
+const repository = targetRepository();
 
 export const createTargetService = async (ctx: Context) => {
   const target = ctx.request.body as CreateTarget;
@@ -34,7 +35,7 @@ export const createTargetService = async (ctx: Context) => {
       return;
     }
 
-    const newTarget = await createTarget(target);
+    const newTarget = await repository.create(target);
     ctx.status = StatusCodes.CREATED;
     ctx.body = newTarget;
   } catch (error) {
@@ -45,7 +46,7 @@ export const createTargetService = async (ctx: Context) => {
 
 export const getTargetsService = async (ctx: Context) => {
   try {
-    ctx.body = await getTargets();
+    ctx.body = await repository.getAll();
   } catch (error) {
     ctx.status = StatusCodes.INTERNAL_SERVER_ERROR;
     ctx.body = { message: error };
@@ -61,7 +62,7 @@ export const updateTargetService = (ctx: Context) => {
     return;
   }
 
-  return simpleActionMiddleware<UpdateTarget, Target>(updateTarget)(ctx);
+  return simpleActionMiddleware<UpdateTarget, Target>(repository.update)(ctx);
 };
 
 export const getTargetByCuidService = simpleActionMiddleware<
@@ -70,7 +71,7 @@ export const getTargetByCuidService = simpleActionMiddleware<
       type: TargetType;
     })
   | null
->(getTargetByCuid);
+>(repository.getByCuid);
 
 
-export const deleteTargetService = simpleActionMiddleware<string, Target>(deleteTarget);
+export const deleteTargetService = simpleActionMiddleware<string, Target>(repository.remove);

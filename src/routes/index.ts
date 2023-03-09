@@ -1,4 +1,4 @@
-import targetRouter from "./targetRouter";
+import targetRouter from "./TargetRouter";
 
 export {
     targetRouter
